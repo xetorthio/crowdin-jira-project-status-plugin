@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+	<ModulePrefs title="__MSG_gadget.title__: __UP_project_name__"
+		directory_title="__MSG_gadget.title__" description="__MSG_gadget.description__">
+		<Optional feature="gadget-directory">
+			<Param name="categories">
+				JIRA
+				Charts
+            </Param>
+		</Optional>
+		<Require feature="views" />
+        <Optional feature="atlassian.util" />
+        <Require feature="setprefs" />
+        <Require feature="settitle"/>
+        <Require feature="dynamic-height"/>
+		
+		<Locale
+			messages="__ATLASSIAN_BASE_URL__/download/resources/crowdin-project-status-plugin/i18n/ALL_ALL.xml" />
+	</ModulePrefs>
+	<UserPref  name="refresh" datatype="hidden" default_value="false" />
+    
+	<UserPref name="project_id" display_name="Project Id:"
+		default_value="" required="true" />
+	<UserPref name="api_key" display_name="API Key:"
+		default_value="" required="true" />
+	<UserPref name="project_name" display_name="Project Name:"
+		default_value="" required="true" />
+	<Content type="html" view="profile,canvas,home">
+		<![CDATA[
+
+		    #requireResource("com.atlassian.jira.gadgets:common")
+		    #includeResources()
+
+			<style type="text/css">
+            	.view {padding:0.5em 1em 0.25em;}
+        	</style>
+
+		    <script type="text/javascript">
+		        (function () {
+				    var gadget = AJS.Gadget({
+				        baseUrl: "__ATLASSIAN_BASE_URL__",
+				        onResizeAdjustHeight: true,
+				        view: {
+				        	enableReload: true,
+				            template: function(args) {
+				                var gadget = this;
+
+								var width = Math.round(gadgets.window.getViewportDimensions().width * (gadgets.views.getCurrentView().getName() === "canvas" ? 0.6 : 0.9));
+				                if (width < 150){
+				                    width = 150;
+				                }
+				                
+            					gadget.getView().addClass("chart").empty();
+
+				                var gadget = this;
+				 
+				                var progress = [];
+				                var langs = [];
+				                var legends = [];
+				 
+				 				AJS.$(args.projectStatus).each(function() {
+				 					progress.push((this.approved*100)/this.phrases);
+				 					langs.push(100);
+				 					legends.push(this.code);
+				                });
+				                
+								var height = ((langs.length)*10)+50;
+				 
+				 				var cont = AJS.$("<img/>").attr({src:"http://chart.apis.google.com/chart?cht=bhs&chs="+width+"x"+height+"&chd=t:"+progress.join(",")+"|"+langs.join(",")+"&chco=00bb00,dd0000&chbh=10&chxt=y&chxl=0:|"+legends.join("|")+"|"});
+				                
+				                var chart = AJS.$("<div id='chart' />").appendTo(gadget.getView());
+				                
+				                chart.height(height);
+				                
+				                chart.append(cont);
+				            },
+				            args: [{
+				                key: "projectStatus",
+				                ajaxOptions: {
+				                	error: function() { return []; }, 
+				                	url: "http://crowdin.net/api/project/__UP_project_id__/status/?key=__UP_api_key__&json"
+				                }
+				            }]
+				        }
+				    });
+				})();
+		    </script>
+		    
+	    ]]>
+	</Content>
+</Module>

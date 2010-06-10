@@ -1,0 +1,24 @@
+<atlassian-plugin key="crowdin-project-status-plugin"
+	name="Crowdin Project Status" plugins-version="2">
+	<plugin-info>
+		<description>Show the Crowdin Project Status</description>
+		<vendor name="Crowdin" url="http://crowdin.net" />
+		<version>1.0</version>
+		<application-version min="4.0" />
+	</plugin-info>
+
+	<gadget key="crowdin-project-status-gadget" name="Crowdin Project Status Gadget"
+		location="gadget.xml" />
+
+	<resource type="download" name="i18n/ALL_ALL.xml" location="i18n/ALL_ALL.xml">
+		<param name="content-type" value="text/xml; charset=UTF-8" />
+	</resource>
+
+	<rest key="crowdin-project-status-rest-resources" path="/crowdin-project-status"
+		version="1.0">
+		<description>Provides the REST resource for the project list.</description>
+	</rest>
+
+	<component-import key="userManager"
+		interface="com.atlassian.sal.api.user.UserManager" />
+</atlassian-plugin>

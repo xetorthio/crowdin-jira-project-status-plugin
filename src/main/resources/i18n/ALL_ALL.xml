@@ -1,0 +1,5 @@
+<messagebundle>
+	<msg name="gadget.title">Crowdin Project Status</msg>
+	<msg name="gadget.description">Show the status of the project translations</msg>
+	<msg name="field.required">Required</msg>
+</messagebundle>
